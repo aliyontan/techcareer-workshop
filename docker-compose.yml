@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    networks:
+      - workshop-net
+
+  python-app:
+    build: ./python-app
+    volumes:
+      - ./python-app:/usr/src/app
+    depends_on:
+      - sqlserver
+    ports:
+      - "8888:8888"
+    networks:
+      - workshop-net
+
+volumes:
+  sqlserverdata:
+
+networks:
+  workshop-net:
